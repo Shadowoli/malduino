@@ -21,6 +21,8 @@
 
 #include "Keyboard.h"
 
+#define ADD_ALTGR\r\n"
+
 #if defined(_USING_HID)
 
 //================================================================================
@@ -265,15 +267,19 @@ size_t Keyboard_::press(uint8_t k)
 			return 0;
 		}
 		
+		#ifdef ADD_ALTGR
+		if (!_altFine) initAltGr();
+		if (_altGrMap[oldKey]){
+		  _keyReport.modifiers |= 0x40;
+		} else {
+		  _keyReport.modifiers = 0;
+		}
+		#endif
+		
 		if (k & 0x80) {						// it's a capital letter or other character reached with shift
 			_keyReport.modifiers |= 0x02;	// the left shift modifier
 			k &= 0x7F;
 		}
-
-    if (!_altFine) initAltGr();
-    if (_altGrMap[oldKey]){
-      _keyReport.modifiers |= 0x40;
-    }
 	}
 	
 	// Add k to the key report only if it's not already present
@@ -314,15 +320,17 @@ size_t Keyboard_::release(uint8_t k)
     if (!k) {
       return 0;
     }
-       
-    if (k & 0x80) {             // it's a capital letter or other character reached with shift
-      _keyReport.modifiers &= ~(0x02);  // the left shift modifier
-      k &= 0x7F;
-    }
-
+    
+    #ifdef ADD_ALTGR
     if (!_altFine) initAltGr();
     if (_altGrMap[oldKey]){
       _keyReport.modifiers &= ~(0x40);
+    }
+    #endif
+   
+    if (k & 0x80) {             // it's a capital letter or other character reached with shift
+      _keyReport.modifiers &= ~(0x02);  // the left shift modifier
+      k &= 0x7F;
     }
   }
   

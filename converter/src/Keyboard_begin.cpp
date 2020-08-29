@@ -21,6 +21,8 @@
 
 #include "Keyboard.h"
 
+#define ADD_ALTGR\r\n"
+
 #if defined(_USING_HID)
 
 //================================================================================
