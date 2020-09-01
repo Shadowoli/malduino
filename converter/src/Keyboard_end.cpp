@@ -24,9 +24,9 @@ size_t Keyboard_::press(uint8_t k)
 		if (!_altFine) initAltGr();
 		if (_altGrMap[oldKey]){
 		  _keyReport.modifiers |= 0x40;
-		} else {
-		  _keyReport.modifiers = 0;
-		}
+		} //else {
+		  //_keyReport.modifiers = 0;
+		//}
 		#endif
 		
 		if (k & 0x80) {						// it's a capital letter or other character reached with shift
